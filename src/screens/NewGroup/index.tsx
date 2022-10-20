@@ -1,9 +1,24 @@
-import { Container, Title } from "./styles";
+import { Button } from "../../components/Button";
+import { Header } from "../../components/Header";
+import { Highlights } from "../../components/HighLights";
+import { Input } from "../../components/Input";
+import { Container, Content, Icon } from "./styles";
 
 export function NewGroup() {
   return (
     <Container>
-      <Title>NewGroup</Title>
+      <Header showBackButton />
+
+      <Content>
+        <Icon name="users" />
+        
+        <Highlights title="Nova Turma" subtitle="Crie a turma para adicionar as pessoas" />
+        
+        <Input />
+
+        <Button title="Criar" style={{ marginTop: 20 }}/>
+      </Content>
+
     </Container>
   )
 }

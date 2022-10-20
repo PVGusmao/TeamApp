@@ -1,4 +1,5 @@
 import styled from "styled-components/native";
+import { FontAwesome } from '@expo/vector-icons';
 
 export const Container = styled.View`
   flex: 1;
@@ -6,6 +7,15 @@ export const Container = styled.View`
   padding: 24px;
 `
 
-export const Title = styled.Text`
-  color: white;
+export const Content = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`
+
+export const Icon = styled(FontAwesome).attrs(({ theme }) => ({
+  size: 56,
+  color: theme.COLORS.GREEN_700
+}))`
+  align-items: center;
 `

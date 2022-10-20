@@ -3,7 +3,7 @@ import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/
 
 import theme from './src/theme';
 
-import { Groups } from './src/screens/Groups';
+import { NewGroup } from './src/screens/NewGroup';
 import { Loading } from './src/components/Loading';
 import { StatusBar } from 'react-native';
 
@@ -18,7 +18,7 @@ export default function App() {
       translucent
     />
       {
-        fontsLoaded ? <Groups /> : <Loading />
+        fontsLoaded ? <NewGroup /> : <Loading />
       }
     </ThemeProvider>
   );
