@@ -3,6 +3,14 @@ import { Alert, FlatList, Text } from "react-native";
 import { useTheme } from "styled-components/native";
 import { useRoute } from "@react-navigation/native";
 
+import { AppError } from "../../utils/AppError";
+
+import { PlayerAddByGroup } from "../../storage/player/playerAddByGroup";
+import { playerGetByGroupAndTeam } from "../../storage/player/playerGetByGroupAndTeam";
+import { PlayerStorageDTO } from "../../storage/player/PlayerStorageDTO";
+
+import { Container, Form, HeaderList, NumberOfPlayers } from "./styles";
+
 import { Button } from "../../components/Button";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import { Filter } from "../../components/Filter";
@@ -10,11 +18,6 @@ import { Header } from "../../components/Header";
 import { Highlights } from "../../components/HighLights";
 import { Input } from "../../components/Input";
 import { PlayerCard } from "../../components/PlayerCard";
-
-import { Container, Form, HeaderList, NumberOfPlayers } from "./styles";
-import { AppError } from "../../utils/AppError";
-import { PlayerAddByGroup } from "../../storage/player/playerAddByGroup";
-import { playersGetGroup } from "../../storage/player/playersGetGroup";
 
 type RouteParams = {
   group: string;
@@ -25,7 +28,7 @@ export function Players() {
   
   const [newPlayerName, setNewPlayerName] = useState('');
   const [team, setTeam] = useState('Time A');
-  const [players, setPlayers] = useState([]);
+  const [players, setPlayers] = useState<PlayerStorageDTO[]>([]);
   
   const route = useRoute();
   const { group } = route.params as RouteParams;
@@ -42,7 +45,7 @@ export function Players() {
 
     try {
       await PlayerAddByGroup(newPlayer, group);
-      
+
     } catch (error) {
       if (error instanceof AppError) {
         Alert.alert('Nova Pessoa', error.message);
@@ -50,6 +53,16 @@ export function Players() {
         console.log(error);
         Alert.alert('Nova Pessoa', 'Não foi possível adicionar.')
       }
+    }
+  }
+
+  async function fetchPlayersByTeam() {
+    try {
+      const playersByTeam = await playerGetByGroupAndTeam(group, team);
+      setPlayers(playersByTeam)
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Pessoas', 'Não foi possível carregar as pessoas filtradas do time selecionado')
     }
   }
   
