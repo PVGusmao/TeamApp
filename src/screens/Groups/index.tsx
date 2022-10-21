@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/native'
+
 import { Button } from '../../components/Button';
 import { EmptyList } from '../../components/EmptyList';
-
 import { GroupCard } from "../../components/GroupCard";
 import { Header } from "../../components/Header"
 import { Highlights } from "../../components/HighLights";
@@ -10,7 +11,7 @@ import { Container } from "./styles";
 
 export const Groups = () => {
   const [groups, setGroups] = useState<string[]>(['Galera da Rocket', 'Amigos']);
-  
+
   return (
     <Container>
       <Header />
@@ -25,7 +26,9 @@ export const Groups = () => {
         contentContainerStyle={[!groups.length ? {flex: 1} : {width: 400}]}
       />
 
-      <Button title="Criar nova turma" />
+      <Button
+        title="Criar nova turma"
+      />
     </Container>
   );
 }
