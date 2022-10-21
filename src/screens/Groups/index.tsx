@@ -10,13 +10,19 @@ import { Highlights } from "../../components/HighLights";
 import { Container } from "./styles";
 
 export const Groups = () => {
-  const [groups, setGroups] = useState<string[]>(['Galera da Rocket', 'Amigos']);
+  const [groups, setGroups] = useState<string[]>([]);
+  
+  const navigation = useNavigation();
+
+  function handleNewGroup() {
+    navigation.navigate('newGroup')
+  }
 
   return (
     <Container>
       <Header />
 
-      <Highlights title="Turmas"  subtitle="Jogue com a sua turma"/>
+      <Highlights title="Turmas" subtitle="Jogue com a sua turma"/>
 
       <FlatList
         data={groups}
@@ -27,6 +33,7 @@ export const Groups = () => {
       />
 
       <Button
+        onPress={handleNewGroup}
         title="Criar nova turma"
       />
     </Container>
