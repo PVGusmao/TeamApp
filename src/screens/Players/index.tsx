@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Alert, FlatList, Text } from "react-native";
+import { useEffect, useState, useRef } from "react";
+import { Alert, FlatList, Text, TextInput } from "react-native";
 import { useTheme } from "styled-components/native";
 import { useRoute } from "@react-navigation/native";
 
@@ -18,6 +18,7 @@ import { Header } from "../../components/Header";
 import { Highlights } from "../../components/HighLights";
 import { Input } from "../../components/Input";
 import { PlayerCard } from "../../components/PlayerCard";
+import { playerRemoveByGroup } from "../../storage/player/playerRemoveByGroup";
 
 type RouteParams = {
   group: string;
@@ -32,6 +33,8 @@ export function Players() {
   
   const route = useRoute();
   const { group } = route.params as RouteParams;
+
+  const newPlayerNameInputRef = useRef<TextInput>(null);
   
   async function handleAddPlayer() {
     if (newPlayerName.trim().length === 0) {
@@ -45,6 +48,9 @@ export function Players() {
 
     try {
       await PlayerAddByGroup(newPlayer, group);
+      newPlayerNameInputRef.current?.blur();
+      setNewPlayerName('');
+      fetchPlayersByTeam();
 
     } catch (error) {
       if (error instanceof AppError) {
@@ -65,6 +71,19 @@ export function Players() {
       Alert.alert('Pessoas', 'Não foi possível carregar as pessoas filtradas do time selecionado')
     }
   }
+
+  async function handlePlayerRemove(playerName: string) {
+    try {
+      await playerRemoveByGroup(playerName, group)
+      fetchPlayersByTeam();
+    } catch (error) {
+      Alert.alert('Remover essoa, Não foi possível remover esta pessoa.')
+    }
+  }
+
+  useEffect(() => {
+    fetchPlayersByTeam();
+  }, [team])
   
   return (
     <Container>
@@ -79,6 +98,10 @@ export function Players() {
           placeholder="Nome da pessoa"
           autoCorrect={false}
           onChangeText={setNewPlayerName}
+          value={newPlayerName}
+          inputRef={newPlayerNameInputRef}
+          onSubmitEditing={handleAddPlayer}
+          returnKeyType="done"
         />
 
         <ButtonIcon icon="add" onPress={handleAddPlayer}/>
@@ -106,7 +129,7 @@ export function Players() {
 
       <FlatList
         data={players}
-        keyExtractor={item => item}
+        keyExtractor={item => item.name}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
           <Text
@@ -121,8 +144,8 @@ export function Players() {
         )}
         renderItem={({ item }) => (
           <PlayerCard
-            name={ item }
-            onRemove={() => {}}
+            name={ item.name }
+            onRemove={() => {handlePlayerRemove(item.name)}}
           />
         )}
         contentContainerStyle={[
